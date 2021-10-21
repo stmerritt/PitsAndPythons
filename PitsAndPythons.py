@@ -1,5 +1,7 @@
 #Empty shell for initial development
 import math
+from random import randint
+from operator import itemgetter
 
 error_msg_sm = [0,'']
 num_ctype = 4   # 0 = Fighter, 1 = Wizard, 2 = Cleric, 3 = Rogue
@@ -49,12 +51,13 @@ def gen_battle_stats(cur_enemy_list, cur_PC_list):
         #print(cur_enemy_list[i][2])
         battle_list.append([cur_enemy_list[i][0], 0, i, initiative, ac, health, 1])
     for n in range(len(cur_PC_list)):
-        initiative = roll_die(20) + get_mod(cur_PC_list[n][5])   # 3 == Dex
-        ac = 10 + get_mod(cur_PC_list[n][5])                     # 3 == Dex
-        health = 20 + get_mod(cur_PC_list[n][4])                 # 2 == Con
+        initiative = roll_die(20) + get_mod(cur_PC_list[n][5])   # 5 == Dex
+        ac = 10 + get_mod(cur_PC_list[n][5])                     # 5 == Dex
+        health = 20 + get_mod(cur_PC_list[n][4])                 # 4 == Con
         #print(cur_PC_list[n][2])
         battle_list.append([cur_PC_list[n][0], 1, n, initiative, ac, health, 1])
     # sort by initiative, then return
+    battle_list = sorted(battle_list, key=itemgetter(3), reverse=True)
     return battle_list
     
 def get_mod(raw_stat):
@@ -118,7 +121,7 @@ def roll_dice(num, size):
 def roll_die(size):
     # For now, return max, random number added later
     # In the future, it'll be range from 1 to size, needs to be equal chance of each possibility
-    return size
+    return randint(1, size)
     
 def select_option(options):
     valid = 0
