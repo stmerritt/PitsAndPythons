@@ -40,6 +40,29 @@ def start_encounter():
     cur_enemy_list = gen_enemies(0,1)
     battle_list = gen_battle_stats(cur_enemy_list, active_PCs)
     print(battle_list)
+    end_battle = False
+    round_cnt = 1
+    while end_battle == False:
+        print('Begin Round ' + str(round_cnt))
+        for battler in battle_list:
+            print(battler[0] + ' turn!')
+            if battler[1] == 0:
+                proc_enemy_action(battler)
+            elif battler[1] == 1:
+                proc_player_action(battler)
+        round_cnt = round_cnt + 1
+        print(battle_list)
+        enemy_conscious = (filter(lambda bl: (bl[5] > 0) and (bl[1] == 0), battle_list) != [])
+        player_conscious = (filter(lambda bl: (bl[5] > 0) and (bl[1] == 1), battle_list) != [])
+        if (enemy_conscious == False) or (player_conscious == False) or (round_cnt == 10):
+            end_battle = True
+    print('Battle is over!')
+
+def proc_enemy_action(enemy):
+    enemy[5] = enemy[5] - 1
+
+def proc_player_action(player):
+    player[5] = player[5] - 1
     
 def gen_battle_stats(cur_enemy_list, cur_PC_list):
     battle_list = []
@@ -93,6 +116,7 @@ def create_character():
             new_char_stats.append(class_types[class_sel][i] + race_types[race_sel][i])
         active_PCs.append(new_char_stats)
         print('New character added: ' + get_char_stats_str(len(active_PCs)-1) + '!')
+        print('')
         
 def get_char_stats_str(i):
     char_stats_str = 'Name: {0}, Race: {1}, Class: {2}, Str: {3}, Con: {4}, Dex: {5}, Int: {6}, Wis: {7}, Cha: {8}'
